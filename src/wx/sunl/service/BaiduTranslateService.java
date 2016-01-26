@@ -7,9 +7,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import wx.sunl.model.baidu.ResultPair;
 import wx.sunl.model.baidu.TranslateResult;
 import wx.sunl.util.Md5Util;
 
@@ -23,6 +28,8 @@ import wx.sunl.util.Md5Util;
  */
 public class BaiduTranslateService {
 
+	public static final Logger logger = LoggerFactory.getLogger(BaiduTranslateService.class);
+	
 	/**
 	 * 
 	* 发起http请求获取返回结果
@@ -94,7 +101,7 @@ public class BaiduTranslateService {
 		//appid+q+salt+密钥 的MD5值
 		String sign = Md5Util.encryptionWithMd5(appid + source + salt + key);
 		
-		String dst = null;
+		String dst = "";
 		//组装查询地址
 //		String requestUrl = "http://openapi.baidu.com/public/2.0/bmt/translate?client_id=2mye0ZM8302vZRLsTVH9d2C8&q={keyWord}&from=auto&to=auto";
 		String requestUrl = url+"?q={keyWord}&from=auto&to=en&appid="+appid+"&salt="+salt+"&sign="+sign;
@@ -108,20 +115,23 @@ public class BaiduTranslateService {
 			//通过Gson工具将json转换成TranslateResult对象
 			TranslateResult translateResult = new Gson().fromJson(json, TranslateResult.class);
 			//取出translateResult中的译文
-			dst = translateResult.getTrans_result().get(0).getDst();
+			List<ResultPair> resultList = translateResult.getTrans_result();
+			for(ResultPair resultPair : resultList){
+				dst += resultPair.getSrc() + ":" + resultPair.getDst() + "\n";
+			}
+//			dst = translateResult.getTrans_result().get(0).getDst();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		if(null == dst){
+		if(dst.equals("")){
 			dst = "翻译系统异常，请稍后重试！";
 		}
 		return dst;
 	}
 	
 	public static void main(String[] args) throws UnsupportedEncodingException {
-		String source = "测试";
+		String source = "测试\n你是我的泪\n哈哈\n我可以翻译这么多个吗";
 		System.out.println(translate(source));
-		
 	}
 }
