@@ -83,6 +83,11 @@
 			<artifactId>servlet-api</artifactId>
 			<version>6.0.44</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.geronimo.bundles</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.4_1</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
