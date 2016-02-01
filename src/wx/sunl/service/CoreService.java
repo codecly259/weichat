@@ -18,7 +18,6 @@ import wx.sunl.model.message.resp.NewsMessage;
 import wx.sunl.model.message.resp.TextMessage;
 import wx.sunl.util.MessageUtil;
 import wx.sunl.util.MySQLUtil;
-import wx.sunl.util.RedisUtil;
 import wx.sunl.util.XiaomUtil;
 
 /** 
