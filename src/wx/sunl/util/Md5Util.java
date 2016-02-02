@@ -2,7 +2,6 @@ package wx.sunl.util;
 
 import java.security.MessageDigest;
 
-import org.apache.axis.types.HexBinary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,21 +19,30 @@ public class Md5Util {
 		// 如果有空则返回""
 		String s = data == null ? "" : data;
 		try {
-			// 将字符串转为字节数组
 			byte[] strTemp = s.getBytes();
-			// 加密器
-			MessageDigest mdTemp = MessageDigest.getInstance("MD5");
-			// 执行加密
-			mdTemp.update(strTemp);
-			// 加密结果
-			byte[] md = mdTemp.digest();
-			// return byteArrayToString(md);
-			return HexBinary.encode(md);
+			MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.reset();
+            md5.update(strTemp);
+            byte[] digest = md5.digest();
+            return toHex(digest);
+			
 		} catch (Exception e) {
 			return null;
 		}
 	}
-
+	
+	public static String toHex(final byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (final byte b : bytes) {
+            String s = Integer.toHexString(0xff & b);
+            if (s.length() < 2) {
+                sb.append("0");
+            }
+            sb.append(s);
+        }
+        return sb.toString();
+    }
+	
 	public static void main(String[] args) {
 		String data = "2015063000000001apple143566028812345678"; // f89f9594663708c1605f3d736d01d2d4
 		System.out.println(encryptionWithMd5(data));
